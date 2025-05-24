@@ -7,6 +7,9 @@ import { useContext } from 'react'
 import { data } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { jwtDecode } from 'jwt-decode';
+// <-- add this line
+
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod')
     const {navigate,backendUrl,token,cartItems,setCartItems,getCartAmount,delivery_fee,products} = useContext(ShopContext)
@@ -32,6 +35,14 @@ const PlaceOrder = () => {
    const onSubmitHandler = async(event)=>{
 event.preventDefault();
 try {
+    
+  let userId = null;
+    if (token) {
+     const decoded = jwtDecode(token);
+      userId = decoded.id || decoded.userId || decoded._id;
+    }
+
+
   let orderItems = []
 
   for(const items in cartItems){
